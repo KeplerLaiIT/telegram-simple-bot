@@ -65,6 +65,8 @@ async function loadRates() {
     const data = await getJson("https://open.er-api.com/v6/latest/USD");
     cards[0].textContent = `${data.rates.RUB.toFixed(2)} RUB`;
     cards[1].textContent = `${(data.rates.RUB / data.rates.EUR).toFixed(2)} RUB`;
+    cards[2].textContent = `${(data.rates.RUB / data.rates.KZT).toFixed(2)} RUB`;
+    cards[3].textContent = `${(data.rates.KZT / data.rates.RUB).toFixed(4)} KZT`;
   } catch {
     cards.forEach((card) => { card.textContent = "Ошибка"; });
     showToast("Не удалось обновить курсы валют.");
