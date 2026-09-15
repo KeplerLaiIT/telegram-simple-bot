@@ -12,7 +12,6 @@ const user = telegram?.initDataUnsafe?.user || {};
 const state = {
   city: localStorage.getItem(cityStorageKey) || "",
   profileName: params.get("profile_name") || localStorage.getItem("profile-name") || "",
-  profileUsername: params.get("profile_username") || localStorage.getItem("profile-username") || "",
 };
 const weatherCodes = {
   0: "Ясно", 1: "Преимущественно ясно", 2: "Переменная облачность", 3: "Пасмурно",
@@ -81,7 +80,7 @@ async function loadRates() {
 function renderProfile() {
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ") || "Гость";
   $("#profile-name-input").value = state.profileName || name;
-  $("#profile-username-input").value = state.profileUsername || user.username || "";
+  $("#profile-username").textContent = user.username ? `@${user.username}` : "не указан";
   $("#profile-city").textContent = state.city || "не указан";
   $("#profile-timezone").textContent = timezone;
   $("#profile-local-time").textContent = new Intl.DateTimeFormat("ru-RU", {
@@ -93,13 +92,10 @@ function renderProfile() {
 
 $("#save-profile").addEventListener("click", () => {
   state.profileName = $("#profile-name-input").value.trim();
-  state.profileUsername = $("#profile-username-input").value.trim().replace(/^@/, "");
   localStorage.setItem("profile-name", state.profileName);
-  localStorage.setItem("profile-username", state.profileUsername);
   if (telegram) {
     telegram.sendData(JSON.stringify({
       profile_name: state.profileName,
-      profile_username: state.profileUsername,
       timezone,
     }));
   } else {
