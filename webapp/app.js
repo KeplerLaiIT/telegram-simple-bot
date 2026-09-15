@@ -1,5 +1,6 @@
 const telegram = window.Telegram?.WebApp;
 const cityStorageKey = "telegram-bot-city";
+const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Moscow";
 
 if (telegram) {
   telegram.ready();
@@ -75,9 +76,21 @@ function renderProfile() {
   $("#profile-name").textContent = name;
   $("#profile-username").textContent = user.username ? `@${user.username}` : "не указан";
   $("#profile-city").textContent = state.city || "не указан";
+  $("#profile-timezone").textContent = timezone;
+  $("#profile-local-time").textContent = new Intl.DateTimeFormat("ru-RU", {
+    dateStyle: "short", timeStyle: "short", timeZone: timezone,
+  }).format(new Date());
   $("#welcome-title").textContent = `Привет, ${user.first_name || "друг"}`;
   $("#home-city").textContent = state.city || "Выбрать город";
 }
+
+$("#sync-timezone").addEventListener("click", () => {
+  if (!telegram) {
+    showToast(`Часовой пояс определён: ${timezone}`);
+    return;
+  }
+  telegram.sendData(JSON.stringify({ timezone }));
+});
 
 document.querySelectorAll("[data-view]").forEach((button) => button.addEventListener("click", () => showView(button.dataset.view)));
 document.querySelectorAll("[data-view-target]").forEach((button) => button.addEventListener("click", () => showView(button.dataset.viewTarget)));
