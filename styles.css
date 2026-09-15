@@ -88,8 +88,9 @@ input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15, 139, 141
 .rate-card span { display: block; margin-bottom: 16px; color: var(--muted); font-size: 12px; font-weight: 700; }
 .rate-card strong { font-family: "Space Grotesk", sans-serif; font-size: 24px; }
 .source-note { margin: 14px 0 0; text-align: center; }
-.profile-list div { display: flex; justify-content: space-between; gap: 16px; padding: 17px 19px; border-bottom: 1px solid var(--line); }
+.profile-list div, .profile-list label { display: flex; justify-content: space-between; gap: 16px; padding: 17px 19px; border-bottom: 1px solid var(--line); }
 .profile-list div:last-child { border-bottom: 0; }
+.profile-list label input { max-width: 58%; padding: 7px 9px; }
 .profile-list span { color: var(--muted); }
 .profile-list strong { text-align: right; overflow-wrap: anywhere; }
 .toast { min-height: 22px; margin: 18px 0 0; color: var(--coral-dark); text-align: center; font-size: 13px; }

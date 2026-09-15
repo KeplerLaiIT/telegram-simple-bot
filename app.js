@@ -1,6 +1,7 @@
 const telegram = window.Telegram?.WebApp;
 const cityStorageKey = "telegram-bot-city";
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Moscow";
+const params = new URLSearchParams(window.location.search);
 
 if (telegram) {
   telegram.ready();
@@ -8,7 +9,11 @@ if (telegram) {
 }
 
 const user = telegram?.initDataUnsafe?.user || {};
-const state = { city: localStorage.getItem(cityStorageKey) || "" };
+const state = {
+  city: localStorage.getItem(cityStorageKey) || "",
+  profileName: params.get("profile_name") || localStorage.getItem("profile-name") || "",
+  profileUsername: params.get("profile_username") || localStorage.getItem("profile-username") || "",
+};
 const weatherCodes = {
   0: "Ясно", 1: "Преимущественно ясно", 2: "Переменная облачность", 3: "Пасмурно",
   45: "Туман", 48: "Изморозь", 51: "Лёгкая морось", 61: "Небольшой дождь",
@@ -75,8 +80,8 @@ async function loadRates() {
 
 function renderProfile() {
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ") || "Гость";
-  $("#profile-name").textContent = name;
-  $("#profile-username").textContent = user.username ? `@${user.username}` : "не указан";
+  $("#profile-name-input").value = state.profileName || name;
+  $("#profile-username-input").value = state.profileUsername || user.username || "";
   $("#profile-city").textContent = state.city || "не указан";
   $("#profile-timezone").textContent = timezone;
   $("#profile-local-time").textContent = new Intl.DateTimeFormat("ru-RU", {
@@ -85,6 +90,23 @@ function renderProfile() {
   $("#welcome-title").textContent = `Привет, ${user.first_name || "друг"}`;
   $("#home-city").textContent = state.city || "Выбрать город";
 }
+
+$("#save-profile").addEventListener("click", () => {
+  state.profileName = $("#profile-name-input").value.trim();
+  state.profileUsername = $("#profile-username-input").value.trim().replace(/^@/, "");
+  localStorage.setItem("profile-name", state.profileName);
+  localStorage.setItem("profile-username", state.profileUsername);
+  if (telegram) {
+    telegram.sendData(JSON.stringify({
+      profile_name: state.profileName,
+      profile_username: state.profileUsername,
+      timezone,
+    }));
+  } else {
+    renderProfile();
+    showToast("Профиль сохранён.");
+  }
+});
 
 $("#sync-timezone").addEventListener("click", () => {
   if (!telegram) {
