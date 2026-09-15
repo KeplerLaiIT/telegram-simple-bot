@@ -12,6 +12,7 @@ const user = telegram?.initDataUnsafe?.user || {};
 const state = {
   city: localStorage.getItem(cityStorageKey) || "",
   profileName: params.get("profile_name") || localStorage.getItem("profile-name") || "",
+  telegramUsername: params.get("telegram_username") || "",
 };
 const weatherCodes = {
   0: "Ясно", 1: "Преимущественно ясно", 2: "Переменная облачность", 3: "Пасмурно",
@@ -80,7 +81,8 @@ async function loadRates() {
 function renderProfile() {
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ") || "Гость";
   $("#profile-name-input").value = state.profileName || name;
-  $("#profile-username").textContent = user.username ? `@${user.username}` : "не указан";
+  const telegramUsername = state.telegramUsername || user.username || "";
+  $("#profile-username").textContent = telegramUsername ? `@${telegramUsername}` : "не указан";
   $("#profile-city").textContent = state.city || "не указан";
   $("#profile-timezone").textContent = timezone;
   $("#profile-local-time").textContent = new Intl.DateTimeFormat("ru-RU", {
