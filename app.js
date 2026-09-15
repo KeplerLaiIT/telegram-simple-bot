@@ -80,20 +80,26 @@ async function loadRates() {
 
 function renderProfile() {
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ") || "Гость";
-  $("#profile-name-input").value = state.profileName || name;
+  const nameInput = $("#profile-name-input");
+  const oldName = $("#profile-name");
+  if (nameInput) nameInput.value = state.profileName || name;
+  if (oldName) oldName.textContent = state.profileName || name;
   const telegramUsername = state.telegramUsername || user.username || "";
-  $("#profile-username").textContent = telegramUsername ? `@${telegramUsername}` : "не указан";
-  $("#profile-city").textContent = state.city || "не указан";
-  $("#profile-timezone").textContent = timezone;
-  $("#profile-local-time").textContent = new Intl.DateTimeFormat("ru-RU", {
+  const username = $("#profile-username");
+  if (username) username.textContent = telegramUsername ? `@${telegramUsername}` : "не указан";
+  if ($("#profile-city")) $("#profile-city").textContent = state.city || "не указан";
+  if ($("#profile-timezone")) $("#profile-timezone").textContent = timezone;
+  if ($("#profile-local-time")) $("#profile-local-time").textContent = new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "short", timeStyle: "short", timeZone: timezone,
   }).format(new Date());
   $("#welcome-title").textContent = `Привет, ${user.first_name || "друг"}`;
   $("#home-city").textContent = state.city || "Выбрать город";
 }
 
-$("#save-profile").addEventListener("click", () => {
-  state.profileName = $("#profile-name-input").value.trim();
+const saveProfile = $("#save-profile");
+if (saveProfile) saveProfile.addEventListener("click", () => {
+  const nameInput = $("#profile-name-input");
+  state.profileName = nameInput ? nameInput.value.trim() : $("#profile-name")?.textContent.trim();
   localStorage.setItem("profile-name", state.profileName);
   if (telegram) {
     telegram.sendData(JSON.stringify({
@@ -106,7 +112,15 @@ $("#save-profile").addEventListener("click", () => {
   }
 });
 
-$("#sync-timezone").addEventListener("click", () => {
+const oldUsernameInput = $("#profile-username-input");
+if (oldUsernameInput) {
+  oldUsernameInput.replaceWith(Object.assign(document.createElement("strong"), {
+    id: "profile-username", textContent: "не указан",
+  }));
+}
+
+const syncTimezone = $("#sync-timezone");
+if (syncTimezone) syncTimezone.addEventListener("click", () => {
   if (!telegram) {
     showToast(`Часовой пояс определён: ${timezone}`);
     return;
