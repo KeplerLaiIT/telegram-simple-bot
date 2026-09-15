@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102a43" />
+    <title>Мой Telegram помощник</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">TELEGRAM MINI APP</p>
+          <h1>Мой помощник</h1>
+        </div>
+        <div class="status-dot" aria-label="Приложение готово"></div>
+      </header>
+
+      <section class="welcome-panel">
+        <p class="eyebrow">ЛИЧНЫЙ ПРОСТРАНСТВО</p>
+        <h2 id="welcome-title">Добро пожаловать</h2>
+        <p id="welcome-text">Погода, валюты и твой профиль в одном месте.</p>
+      </section>
+
+      <nav class="tabs" aria-label="Разделы приложения">
+        <button class="tab active" data-view="home">Обзор</button>
+        <button class="tab" data-view="weather">Погода</button>
+        <button class="tab" data-view="rates">Валюты</button>
+        <button class="tab" data-view="profile">Профиль</button>
+      </nav>
+
+      <section id="home-view" class="view active-view">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">СЕГОДНЯ</p>
+            <h2>Что посмотреть?</h2>
+          </div>
+          <span class="date" id="today"></span>
+        </div>
+        <div class="feature-grid">
+          <button class="feature-card weather-card" data-view-target="weather">
+            <span class="card-icon">☼</span>
+            <span class="card-title">Погода</span>
+            <span class="card-value" id="home-city">Выбрать город</span>
+          </button>
+          <button class="feature-card currency-card" data-view-target="rates">
+            <span class="card-icon">₽</span>
+            <span class="card-title">Курсы валют</span>
+            <span class="card-value">USD · EUR к RUB</span>
+          </button>
+        </div>
+      </section>
+
+      <section id="weather-view" class="view">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">ПОГОДА</p>
+            <h2>Как там на улице?</h2>
+          </div>
+          <span class="weather-mark">☁</span>
+        </div>
+        <form id="weather-form" class="search-form">
+          <label for="city-input">Город</label>
+          <div class="input-row">
+            <input id="city-input" type="text" placeholder="Например, Москва" autocomplete="off" />
+            <button type="submit" class="primary-button">Узнать</button>
+          </div>
+        </form>
+        <div id="weather-result" class="result-panel empty-state">Введи город, чтобы получить текущую погоду.</div>
+      </section>
+
+      <section id="rates-view" class="view">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">КУРСЫ</p>
+            <h2>Валюты к рублю</h2>
+          </div>
+          <span class="weather-mark">₽</span>
+        </div>
+        <button id="rates-button" class="primary-button wide-button">Обновить курсы</button>
+        <div id="rates-result" class="rates-grid">
+          <div class="rate-card"><span>USD / RUB</span><strong>—</strong></div>
+          <div class="rate-card"><span>EUR / RUB</span><strong>—</strong></div>
+          <div class="rate-card"><span>KZT / RUB</span><strong>—</strong></div>
+          <div class="rate-card"><span>RUB / KZT</span><strong>—</strong></div>
+        </div>
+        <p class="source-note">Данные загружаются с open.er-api.com</p>
+      </section>
+
+      <section id="profile-view" class="view">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">ПРОФИЛЬ</p>
+            <h2>Твои данные</h2>
+          </div>
+          <span class="weather-mark">◎</span>
+        </div>
+        <div class="profile-list">
+          <label><span>Имя</span><input id="profile-name-input" type="text" placeholder="Твоё имя" /></label>
+          <div><span>Username Telegram</span><strong id="profile-username">—</strong></div>
+          <div><span>Сохранённый город</span><strong id="profile-city">—</strong></div>
+          <div><span>Часовой пояс</span><strong id="profile-timezone">—</strong></div>
+          <div><span>Местное время</span><strong id="profile-local-time">—</strong></div>
+        </div>
+        <button id="save-profile" class="primary-button wide-button">Сохранить профиль</button>
+        <button id="sync-timezone" class="primary-button wide-button">Синхронизировать часовой пояс</button>
+      </section>
+
+      <p id="toast" class="toast" role="status"></p>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
